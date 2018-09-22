@@ -1,0 +1,106 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+
+\begin{document}
+\section{Case Study 1: Thermoregulation in Limpets}
+
+\textbf{Goal:} In one paragraph describe the goal of the case study.
+
+This study develops and analyzes a simple heat budget budget model for an inter-tidal limpet, (insert species here). Inter-tidal organisms are vulnerable to environmental changes due to their spatial dependence on a solid surface, usually rock, and the extreme temperature changes from cycling contact with air and water. This diversity in environmental contact allows inter-tidal species to be good forerunners in studying the effects of climate change on organisms. 
+Frequently, heat budget models do not account for thermal conduction between an organism and and the substratum it's in contact with. The following model introduces a heat-budget system forth which to accurately predict the temperature of an organism that is highly dependent on the thermal conduction between the organism and underlying rock layer. 
+
+\subsection{Background}
+
+State the objective and the biological background needed to understand the problem.
+
+Typically, heat budget models are constructed such that they can produce accurate results from standard meteorological parameters. This entails the variants within the model to be based on heat going into the organism via solar radiation, and heat leaving the system via evaporation and convective transfer with the air. Due to the hard shell of the limpet,  heat loss due to evaporation is negligable in this model.
+Similarly, there are heat-budget models that take into account thermal conductivity between the organism and the rock substratum, but rely on emperically induced data to incorporate it into the model. This model relies only on meteorological data; using the temperature of the ocean to predict the temperature of the rock and deriving the conductive gradient from it. 
+
+\subsection{The Data}
+
+\ This is an example of how to incorporate and exercise.
+
+\begin{tabular}{| c | c | c |}\hline
+Parameter & Units & species \\ \hline
+$\alpha_{sw}$ & None & \\
+$\alpha_{lw}$ & None & \\
+$\epsilon_{lw,s}$ & None &\\
+$V_s$ & None & 0.7\\
+$R$ & cm &\\
+$H$ & cm &\\
+$K_r$ & $W m^{-1} K^{-1}$ & 3.06\\
+$\rho$ & $kg m^{-3}$ & 2601\\
+$c_r$ & $J kg^{-1} K^{-1}$ & 789\\
+$k$ & $m^2 s^{-1}$ & $1.49*10^{-6}$\\ 
+$a$ & None & \\
+$b$ & None & \\ \hline
+\end{tabular}
+
+\subsection{Model Formulation}
+This model assumes the law of conservation applied to thermodynamics, that is
+
+$$Q_{in}-Q_{out}=Q_{stored}$$
+
+We then insert components into the model that effect the body temperature of a limpet. This includes short wave radiation from the sun, long-wave radiation from the atmosphere, conductive heat transfer from the limpets contact with the earth, wind-speed dependent convection, heat-loss due to evaporation, and heat gained from metabolic reactions.
+
+$$Q_{sw} \pm Q_{lw} \pm Q_{cd} \pm Q_{cv} \pm  Q_e \pm Q_m= Q_{stored}$$
+
+This model can be simplified by removing inconsequential terms, such as the low metabolic rate of limpets, and the ability of water to escape from beneath the shell via evaporation. Similarly, due to the small thermal mass of limpets, we set $Q_{stored} = 0$, yielding 
+
+$$Q_{sw} \pm Q_{lw} \pm Q_{cd} \pm Q_{cv} = 0$$
+
+We can then define our short-wave heat transfer term by the the area of the limpets shell that is in direct contact with the sun. That is,
+
+$$Q_{sw} = A*\alpha_{sw}*I_{sw} = q_1$$, where $\alpha_{sw}$ is the absorbance coeffiencient for sunlight on the shell. Note that $Q_{sw}$ is dependent on the sun's intensity, $I$, the solar irradiance.
+
+For long-wave heat transfer, we break the term into two parts; heat transfer into the limpet from the air, and heat transfer from the limpet to the air. 
+$$Q_{lw} = Q_{lw,a} - Q_{lw,l}$$
+
+For this, the Stefan-Boltzmann relationship is given to describe how long-wave radiation is transferred from one system to another.
+
+$$Q_{lw} = \epsilon_{lw} \sigma T^4$$
+
+Note that $Q_{lw,a}$ is dependent on the temperature of the air and $Q_{lw,l}$ is dependent on the body temperature of the limpet. Thus,
+
+$$Q_{lw,a} =V_s*A_l*\alpha_{lw,s}*\epsilon_{lw,a}*\sigma*T_a^4$$, $$Q_{lw,s} =V_s*A_l*\epsilon_{lw,a}*\sigma*T_b^4$$ and,
+$$Q_{lw} = V_s*A_l*\alpha_{lw,s}*\epsilon_{lw,a}*\sigma*T_a^4 - V_s*A_l*\epsilon_{lw,s}*\sigma*T_b^4 = V_s*A_l*\epsilon_{lw,s}*\sigma*(\epsilon_{lw,a}*T_a^4 - T_b^4)$$
+
+$$Q_{lw} = q_2 + q_3(T_a-T_b)$$
+
+Using Newton's law of cooling, we assume that the rate at which the limpet gains or loses heat by
+
+$$Q_{cv} = h_c A_{cv} (T_a - T_b) = q_4(T_a - T_b)$$,
+
+where $A_{cv}$ is the area of the shell. Note $h_c$ is the convective heat transfer coefficient corresponding to the shape and size of the shell, and is dependent upon wind-speeds.
+
+Similarly, the conductive heat transfer term is governed by
+
+$$Q_{cd} = A_{cd} K_r (\frac{dT_r}{dz})$$.
+Here, $Q_{cd}$ is the area of the limpets shell in direct contact with the rock beneath it, $A_{cd} = \pi R^2$, $K_r$ is the thermal conductivity of the rock, and $\frac{dT_r}{dz}$ is the temperature of the rock as a function of distance from the limpet; that is, at $z = 0$, $T_r = T_b$, where $T_b$ is the body temperature of the limpet. To determine $\frac{dT_r}{dz}$, we assume the one-dimensional heat equation to describe the propogation of heat throughout the rock. 
+$$\frac{\partial T_r}{\partial t} = k \frac{\partial^2 T_r}{dt^2}$$,  
+where k is the thermal diffusivity of the rock.
+
+To find our steady state solution, we let $T_r[z,0]$ be our initial vector  that contains the temperature of the rock at each distance $dz$ into the rock.
+
+Using a finite-difference approach, we set each node for $z \neq 0$ to the temperature of the ocean. The body temperature of the limpet and the ocean temperature is used as our boundary conditions such that $$T_r[z,t+1] = T_r[z,t] + k*\frac{dt}{dz^2}*(T_r[z+1,t] - 2*T_r[z,t] + T_r[z-1,t])$$ 
+
+
+
+$$(\frac{\partial T_r}{\partial z})_i=\frac{T_i - T_{i-1}}{\Delta z}$$
+
+$$(\frac{\partial^2 T_r}{\partial z^2})_i=\frac{(\frac{\partial T_r}{\partial z})_i-(\frac{\partial T_r}{\partial z})_{i-1}}{\Delta z}$$
+
+Substituting each equation, 
+$$q_1 + q_2 + (q_3+q_4)T_a + q_5(T_2 - T_b) = 0$$
+$$T_b = \frac{q_1 + q_2 + (q_3+q_4)T_a + q_5 T_2}{q_3 + q_4 + q_5}$$
+
+\subsection{Parameter Estimation}
+1. Area
+The limpet is modeled as a cone, $A_{cd}=\pi R^2$ and $A_1 = \pi R \sqrt[]{H^2 + R^2}$
+
+2.
+
+\subsection{Model Evaluation/Analysis}
+
+\end{document}
